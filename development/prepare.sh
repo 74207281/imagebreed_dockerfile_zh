@@ -5,9 +5,9 @@ mkdir repos
 mkdir repos_opencv
 
 # imagebreed dev code
-git clone --branch master --depth 1 https://github.com/74207281/imagebreed_zh.git  repos_dev/sgn
+git clone --branch dev --depth 1 https://github.com/74207281/imagebreed_zh.git  repos_dev/sgn
 git clone https://github.com/solgenomics/DroneImageScripts.git repos_dev/DroneImageScripts
-git clone https://github.com/nickmorales/imagesol_zh.git repos_dev/imagesol
+git clone --branch dev --depth 1  https://github.com/74207281/imagesol_zh.git repos_dev/imagesol
 
 # core code
 git clone --branch topic/metadata_schema_fixes --depth 1 https://github.com/solgenomics/cxgn-corelibs.git repos/cxgn-corelibs
