@@ -1,15 +1,18 @@
-version: "3.3"
+# version: "3.3"
 
 services:
-  breedbase:
+  breedbase_zh:
     image: imagebreed/imagebreed:10.1
     restart: always
     depends_on:
-      - breedbase_db
-    container_name: breedbase_web
+      - breedbase_db_zh
+      - flask
+    container_name: breedbase_web_zh
     ports:
-      - 7080:8080
-      - 25:25
+      - 5080:8080
+      - 23:25
+    networks:
+      - app-network
     environment:
       - PGPASSFILE=/home/production/.pgpass
     #  - MODE=DEVELOPMENT
@@ -18,7 +21,7 @@ services:
     #  - RUN_DB_ONTOLOGY_G2F_UPDATES=TRUE
     #  - RUN_DB_ONTOLOGY_ALF_UPDATES=TRUE
     #  - RUN_DB_PATCHES=TRUE
-    #  - DATABASE_HOST=breedbase_db
+      - DATABASE_HOST=breedbase_db_zh
     #  - DATABASE_NAME=empty_fixture
     #  - DATABASE_USER=postgres
     #  - DATABASE_PASSWORD=postgres
@@ -64,11 +67,45 @@ services:
     #  - type: bind
     #    source: /var/run/docker.sock
     #    target: /var/run/docker.sock
-  breedbase_db:
+  breedbase_db_zh:
     image: imagebreed/imagebreedpg:10.1
     restart: always
-    container_name: breedbase_db
+    container_name: breedbase_db_zh
+    networks:
+      - app-network
     #volumes:
     #  - type: bind
     #    source: ${HOME}/pgdata
     #    target: /var/lib/postgresql/data
+  flask:
+    build: 
+      context: flask_dev
+      dockerfile: Dockerfile
+    container_name: flask
+    # expose:
+      # - "4000"
+    env_file:
+      - "flask_dev/.env"
+    environment:
+      - FLASK_ENV=development
+    networks:
+      - app-network
+  
+  imagebreed-nginx:
+    container_name: imagebreed-nginx
+    image: nginx
+    ports:
+      - "70:70"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      # - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    restart: always
+    depends_on:
+      - flask
+      - breedbase_zh
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
