@@ -5,6 +5,9 @@ LABEL main_version="9"
 
 ENV CPANMIRROR=http://cpan.cpantesters.org
 ENV TZ UTC
+ENV LANG zh_TW.UTF-8
+ENV LANGUAGE zh_TW:zh
+ENV LC_ALL zh_TW.UTF-8
 
 EXPOSE 8080
 
